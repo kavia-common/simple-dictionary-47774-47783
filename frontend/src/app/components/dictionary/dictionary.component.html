@@ -1,0 +1,68 @@
+<div class="page">
+  <header class="header">
+    <h1 class="brand">Dictionary</h1>
+    <div class="search">
+      <input
+        class="search-input"
+        type="text"
+        [value]="query()"
+        (input)="onInput(($any($event.target))?.value ?? '')"
+        placeholder="Search an English word..."
+        aria-label="Search word"
+      />
+      <button class="search-btn" (click)="onSearch()" aria-label="Search">
+        Search
+      </button>
+    </div>
+  </header>
+
+  <main class="content">
+    <section class="status" *ngIf="loading()">
+      <div class="loading-spinner" aria-hidden="true"></div>
+      <span class="loading-text">Searching definitions...</span>
+    </section>
+
+    <section class="status error" *ngIf="!loading() && error()">
+      <span class="error-icon" aria-hidden="true">!</span>
+      <span class="error-text">{{ error() }}</span>
+    </section>
+
+    <section class="status empty" *ngIf="!loading() && !error() && searchedOnce() && (!results() || results()?.length === 0)">
+      <span class="empty-text">Try another word.</span>
+    </section>
+
+    <section class="results" *ngIf="!loading() && results() && results()!.length">
+      <div class="card" *ngFor="let entry of results()!; trackBy: trackByIndex">
+        <div class="card-header">
+          <h2 class="word">{{ entry.word }}</h2>
+          <div class="phonetics" *ngIf="entry.phonetics?.length">
+            <span *ngFor="let ph of entry.phonetics; trackBy: trackByIndex">
+              {{ ph.text }}
+            </span>
+          </div>
+        </div>
+
+        <div class="meanings">
+          <div class="meaning" *ngFor="let m of entry.meanings; trackBy: trackByIndex">
+            <div class="pos">{{ m.partOfSpeech }}</div>
+            <ul class="defs">
+              <li *ngFor="let d of m.definitions; trackBy: trackByIndex">
+                <p class="definition">{{ d.definition }}</p>
+                <p class="example" *ngIf="d.example">“{{ d.example }}”</p>
+                <p class="synonyms" *ngIf="d.synonyms?.length">
+                  <span class="syn-label">Synonyms:</span>
+                  <span class="syn-list">{{ d.synonyms!.join(', ') }}</span>
+                </p>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="sources" *ngIf="entry.sourceUrls?.length">
+          <span>Source: </span>
+          <a *ngFor="let s of entry.sourceUrls; trackBy: trackByIndex" [href]="s" target="_blank" rel="noopener noreferrer">{{ s }}</a>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>

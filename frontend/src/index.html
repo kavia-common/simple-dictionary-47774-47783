@@ -2,10 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Angular</title>
+  <title>Dictionary</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#2563EB">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <script>
+    // Optional: If the hosting environment exposes env via window.processEnv,
+    // bridge NG_APP_API_BASE to a global the app can read.
+    (function(){
+      try{
+        if (window && window.processEnv && window.processEnv.NG_APP_API_BASE) {
+          window.NG_APP_API_BASE = window.processEnv.NG_APP_API_BASE;
+        }
+      }catch(e){}
+    })();
+  </script>
 </head>
 <body>
   <app-root></app-root>
